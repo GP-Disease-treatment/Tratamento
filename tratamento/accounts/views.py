@@ -5,7 +5,7 @@ from rest_framework import status
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User
-from openai import OpenAI
+import google.generativeai as genai
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
@@ -24,20 +24,12 @@ class LoginView(APIView):
         else:
             return Response({'message': 'There is no user with these access credentials'}, status=status.HTTP_404_NOT_FOUND)
 
+
+
 class GPTView(APIView):
-    def get(self, request):
-        client = OpenAI()
-
-        completion = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {
-                    "role": "user",
-                    "content": "Write a haiku about recursion in programming."
-                }
-            ]
-        )
-
-        print(completion.choices[0].message)
-        return Response(status=status.HTTP_200_OK)
+    def post(self, request):
+        data = request.data.get('prognostico')
+        genai.configure()
+        model = genai.GenerativeModel('gemini-pro')
+        response = model.generate_content("Baseado no seguinte prognóstico e condição de saúde do usuário relacionada ao fígado, por favor, indique as melhores opções de tratamento e recomendações médicas detalhadas. Prognóstico do usuário:"+data)
+        return Response({'tratamento': response.text},status=status.HTTP_200_OK)

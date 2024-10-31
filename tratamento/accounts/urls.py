@@ -1,7 +1,6 @@
 from django.urls import path
-from .views import GPTView, LoginView
+from .views import TratamentoView
 
 urlpatterns = [
-    path('login/', LoginView.as_view(), name="login"),
-    path('gpt/', GPTView.as_view(), name="gpt"),
+    path('treatment/', TratamentoView.as_view(), name="treatment"),
 ]

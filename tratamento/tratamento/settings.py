@@ -1,10 +1,9 @@
 from pathlib import Path
 from dotenv import load_dotenv
 import os
-import openai
 
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+GOOGLE_API_KEY= os.getenv('GOOGLE_API_KEY')
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = int(os.getenv('DEBUG', '0')) == 1
 BASE_DIR = Path(__file__).resolve().parent.parent
