@@ -5,6 +5,7 @@ from rest_framework import status
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User
+from openai import OpenAI
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
@@ -24,6 +25,19 @@ class LoginView(APIView):
             return Response({'message': 'There is no user with these access credentials'}, status=status.HTTP_404_NOT_FOUND)
 
 class GPTView(APIView):
-    #aqui deverá ser feita a integração com o GPT
-    def post(self, request):
+    def get(self, request):
+        client = OpenAI()
+
+        completion = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {
+                    "role": "user",
+                    "content": "Write a haiku about recursion in programming."
+                }
+            ]
+        )
+
+        print(completion.choices[0].message)
         return Response(status=status.HTTP_200_OK)
